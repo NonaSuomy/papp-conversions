@@ -73,6 +73,7 @@ An app that needs files on the card lists them under `data`. Publish store puts 
 `tools/build_papp.py` mirrors upstream `tools/build_lvgl_papp.ps1` (and, for `custom`, the game scripts):
 
 1. Compile with `riscv32-esp-elf-gcc -march=rv32imafc_zicsr_zifencei -mabi=ilp32f -mcmodel=medany -ffreestanding -fno-tree-loop-distribute-patterns -Os -DPAPP_APP_SIDE=1` (for `custom`, with the manifest's flags instead).
+   Builds are reproducible: `SOURCE_DATE_EPOCH` is the source commit's time (WinQuake, PrBoom and Duke3D embed `__DATE__`/`__TIME__`), and `-ffile-prefix-map` hides the checkout path. The same commit always gives the same `.papp`, which Publish store relies on.
 2. Link with `psram_app.ld` at `0x4A000000`, entry `app_entry`, `--gc-sections --no-relax`.
 3. `objcopy -O binary`, then work out `.bss` from the `_bss_end` symbol. The build refuses to pack without it, because a wrong `.bss` size corrupts the device heap.
 4. Pack with `pack_papp.py` (32-byte header: magic `PAPP`, ABI 1, entry/text/data/bss sizes).
