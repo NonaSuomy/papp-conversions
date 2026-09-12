@@ -262,6 +262,26 @@ class DeviceApiTests(unittest.TestCase):
             eb.call_device_action(self.cfg, "papp_refresh_catalog", {})
 
 
+class EventTests(unittest.TestCase):
+    def test_system_and_github_messages_are_never_answered(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            cfg = make_config(Path(tmp))
+            calls = []
+
+            class FakeHub:
+                def call(self, tool, args, timeout=90):
+                    calls.append(tool)
+                    return {}
+
+            for kind in ("system", "github"):
+                eb.handle_event({"from": kind, "from_kind": kind, "channel": "merge-requests", "id": "m1",
+                                 "text": "@esp-bridge status"}, cfg, FakeHub(), eb.Runner(cfg, dry_run=True))
+            self.assertEqual(calls, [])
+            eb.handle_event({"from": "nona", "from_kind": "human", "channel": "general", "id": "m2",
+                             "text": "@esp-bridge status"}, cfg, FakeHub(), eb.Runner(cfg, dry_run=True))
+            self.assertIn("post_message", calls)
+
+
 class TokenTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

@@ -596,6 +596,10 @@ def handle_event(event: dict, cfg: Config, hub: Hub, runner: Runner) -> None:
     author = str(event.get("from", "")).lower()
     if author == cfg.handle.lower():
         return
+    # Only people and agents send jobs. System and GitHub feed messages (a PR
+    # description quoting a request, task updates) are never answered.
+    if event.get("from_kind", "human") not in ("human", "agent"):
+        return
     thread = event.get("thread_id") or event.get("id")
     channel = event.get("channel")
     try:
