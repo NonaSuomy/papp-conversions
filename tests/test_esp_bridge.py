@@ -87,6 +87,12 @@ class ParseTests(unittest.TestCase):
     def test_a_lone_request_line_with_a_typo_gets_help(self):
         with self.assertRaises(eb.BridgeError):
             eb.parse_request("@esp-bridge compil", None, "esp-bridge")
+        with self.assertRaises(eb.BridgeError):
+            eb.parse_request('@esp-bridge compile "x.yaml', None, "esp-bridge")
+
+    def test_a_stray_quote_in_a_longer_message_is_not_an_error(self):
+        text = 'Its reply said "Bridge is up", and\n@esp-bridge " is up, and so on\nthen more text'
+        self.assertIsNone(eb.parse_request(text, None, "esp-bridge"))
 
     def test_unknown_action_and_bad_seconds_are_refused(self):
         with self.assertRaises(eb.BridgeError):

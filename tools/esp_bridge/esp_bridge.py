@@ -188,7 +188,10 @@ def request_words(text: str, handle: str) -> list[str] | None:
         try:
             words = shlex.split(rest.strip().rstrip("`"))
         except ValueError as error:
-            raise BridgeError(f"Could not read the request: {error}.")
+            # A stray quote in chatter is not a request; a lone request line is.
+            if len([ln for ln in text.splitlines() if ln.strip()]) == 1:
+                raise BridgeError(f"Could not read the request: {error}.")
+            continue
         if words:
             words[0] = words[0].strip("`.,:;!?").lower()
             candidates.append(words)
