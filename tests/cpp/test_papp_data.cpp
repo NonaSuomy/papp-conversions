@@ -1,6 +1,6 @@
 // Host tests for esphome/components/papp_loader/papp_data.h.
 //
-//   g++ -std=gnu++17 -Wall -Wextra -Werror -I esphome/components/papp_loader \
+//   g++ -std=gnu++17 -Wall -Wextra -Werror -I esphome/components/papp_loader
 //       tests/cpp/test_papp_data.cpp -o /tmp/test_papp_data && /tmp/test_papp_data
 
 #include "papp_data.h"
