@@ -66,6 +66,28 @@ class ParseTests(unittest.TestCase):
         self.assertIsNone(eb.parse_request("no mention here", None, "esp-bridge"))
         self.assertIsNone(eb.parse_request("@esp-bridge", None, "esp-bridge"))
 
+    def test_only_lines_that_start_with_the_mention_are_requests(self):
+        # Seen live: the bridge's own pasted startup line, a quoted mention and
+        # a mention inside a sentence were all taken as requests.
+        ignored = [
+            "[nona@box tool]$ python esp_bridge.py serve\n@esp-bridge listening from seq 448 (dry run: False)",
+            "It answered but not my `@esp-bridge status` (452). Is serve running?",
+            "hey @esp-bridge can you compile?",
+            "@esp-bridge-2 status",
+        ]
+        for text in ignored:
+            with self.subTest(text=text):
+                self.assertIsNone(eb.parse_request(text, None, "esp-bridge"))
+        req = eb.parse_request("It took `@esp-bridge listening …` as a command. Now:\n\n@esp-bridge status", None, "esp-bridge")
+        self.assertEqual(req.action, "status")
+        req = eb.parse_request("> @ESP-Bridge launch url=https://x.invalid/a.papp", None, "esp-bridge")
+        self.assertEqual((req.action, req.url), ("launch", "https://x.invalid/a.papp"))
+        self.assertEqual(eb.parse_request("@esp-bridge status.", None, "esp-bridge").action, "status")
+
+    def test_a_lone_request_line_with_a_typo_gets_help(self):
+        with self.assertRaises(eb.BridgeError):
+            eb.parse_request("@esp-bridge compil", None, "esp-bridge")
+
     def test_unknown_action_and_bad_seconds_are_refused(self):
         with self.assertRaises(eb.BridgeError):
             eb.parse_request("@esp-bridge rm -rf /", None, "esp-bridge")
