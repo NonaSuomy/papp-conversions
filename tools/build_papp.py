@@ -170,11 +170,23 @@ class Unit:
         self.src, self.obj, self.flags, self.compiler = src, obj, flags, compiler
 
 
-def compile_one(unit: Unit) -> None:
+def compile_one(unit: Unit, env: dict | None = None) -> None:
     unit.obj.parent.mkdir(parents=True, exist_ok=True)
-    result = subprocess.run([unit.compiler, *unit.flags, "-c", "-o", str(unit.obj), str(unit.src)], capture_output=True, text=True)
+    result = subprocess.run([unit.compiler, *unit.flags, "-c", "-o", str(unit.obj), str(unit.src)],
+                            capture_output=True, text=True, env=env)
     if result.returncode != 0:
         raise RuntimeError(f"compile failed: {unit.src}\n{result.stderr}")
+
+
+def reproducible_env(src_root: Path) -> tuple[dict, int]:
+    """Compiler environment that makes __DATE__/__TIME__ the source commit's time.
+
+    Some ports print their build time (WinQuake: __TIME__ __DATE__; PrBoom and
+    Duke3D: __DATE__). Without this every CI run produces a different binary,
+    and Publish store refuses a changed binary under an already released version.
+    """
+    epoch = int(run(["git", "log", "-1", "--format=%ct", "HEAD"], cwd=src_root, capture_output=True).stdout.strip())
+    return {**os.environ, "SOURCE_DATE_EPOCH": str(epoch)}, epoch
 
 
 def source_file(root: Path, rel: str) -> Path:
@@ -270,9 +282,14 @@ def build_app(manifest_path: Path, cache: Path, out: Path, jobs: int) -> dict:
     if build != "custom":
         for c in sorted(app_dir.glob("*.c")):
             units.append(Unit(c, build_dir / (c.stem + ".o"), cflags))
-    print(f"  compiling {len(units)} files", flush=True)
+    # Same bytes on every machine and run: pinned timestamps, and the local
+    # checkout path (which __FILE__ would embed) mapped to a fixed name.
+    env, epoch = reproducible_env(src_root)
+    for unit in units:
+        unit.flags = unit.flags + [f"-ffile-prefix-map={cache}=/papp-src"]
+    print(f"  compiling {len(units)} files (SOURCE_DATE_EPOCH={epoch})", flush=True)
     with ThreadPoolExecutor(max_workers=jobs) as pool:
-        list(pool.map(compile_one, units))
+        list(pool.map(lambda unit: compile_one(unit, env), units))
 
     elf = build_dir / f"{name}.elf"
     link = [linker, *ldflags, f"-T{sdk / 'tools/psram_app.ld'}", "-o", str(elf), *[str(u.obj) for u in units], *link_tail]
