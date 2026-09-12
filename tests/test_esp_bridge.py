@@ -281,6 +281,24 @@ class EventTests(unittest.TestCase):
                              "text": "@esp-bridge status"}, cfg, FakeHub(), eb.Runner(cfg, dry_run=True))
             self.assertIn("post_message", calls)
 
+    def test_replies_never_mention_the_bridge_itself(self):
+        # The hub rejects self-mentions, which silently dropped every status reply.
+        with tempfile.TemporaryDirectory() as tmp:
+            cfg = make_config(Path(tmp))
+            posted = []
+
+            class FakeHub:
+                def call(self, tool, args, timeout=90):
+                    if tool == "post_message":
+                        posted.append(args["text"])
+                    return {}
+
+            eb.handle_event({"from": "claude", "from_kind": "agent", "channel": "general", "id": "m3",
+                             "text": "@esp-bridge status"}, cfg, FakeHub(), eb.Runner(cfg, dry_run=True))
+            self.assertEqual(len(posted), 1)
+            self.assertIn("is up", posted[0])
+            self.assertNotIn("@esp-bridge", posted[0].lower())
+
 
 class TokenTests(unittest.TestCase):
     def setUp(self):
