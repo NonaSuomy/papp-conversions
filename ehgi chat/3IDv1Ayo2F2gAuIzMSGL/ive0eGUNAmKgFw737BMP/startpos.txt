@@ -1,0 +1,3 @@
+SYNC start: scenario SCM05EA.INI, official 1, players 2, AI 0, look_for 4, seed 4738bf0b, 4 waypoints: 5295 9678 9167 5462
+SYNC start: house 12 (NonaSuomy02) takes waypoint 0, cell 5295
+SYNC start: house 13 (NonaSuomy01) takes waypoint 1, cell 9678
