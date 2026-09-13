@@ -1,0 +1,13 @@
+RA95: Found local address: 127.0.0.1
+RA95: Using broadcast address of: 127.0.0.1
+RA95: Found local address: 10.20.30.158
+RA95: Using broadcast address of: 10.20.30.255
+SYNC terrain: 17 entries, 17 placed, 0 rejected, 0 unknown types, map theater 0, TerrainMax 500
+SYNC start: scenario SCM05EA.INI, official 1, players 2, AI 0, look_for 4, seed ea7cb18c, 4 waypoints: 5295 9678 5837 6227
+SYNC start: SCM05EA.INI from general.mix (mix size 4163), read 4163 bytes, crc f035820e
+SYNC start: house 12 (NonaSuomy02) takes waypoint 0, cell 5295
+SYNC start: house 13 (NonaSuomy01) takes waypoint 1, cell 9678
+RA95: Found local address: 127.0.0.1
+RA95: Using broadcast address of: 127.0.0.1
+RA95: Found local address: 10.20.30.158
+RA95: Using broadcast address of: 10.20.30.255
