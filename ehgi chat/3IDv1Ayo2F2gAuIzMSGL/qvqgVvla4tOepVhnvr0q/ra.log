@@ -1,0 +1,14 @@
+RA95: Found local address: 127.0.0.1
+RA95: Using broadcast address of: 127.0.0.1
+RA95: Found local address: 10.20.30.158
+RA95: Using broadcast address of: 10.20.30.255
+SYNC terrain: TC05 at cell 5944 not placed (object created, theater mask 3, map theater 0)
+SYNC terrain: TC04 at cell 5815 not placed (object created, theater mask 3, map theater 0)
+SYNC terrain: TC01 at cell 6071 not placed (object created, theater mask 3, map theater 0)
+SYNC terrain: T16 at cell 7221 not placed (object created, theater mask 3, map theater 0)
+SYNC terrain: MINE at cell 9901 not placed (object created, theater mask 3, map theater 0)
+SYNC terrain: 17 entries, 0 placed, 17 rejected, 0 unknown types, map theater 0, TerrainMax 500
+RA95: Found local address: 127.0.0.1
+RA95: Using broadcast address of: 127.0.0.1
+RA95: Found local address: 10.20.30.158
+RA95: Using broadcast address of: 10.20.30.255
