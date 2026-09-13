@@ -1,0 +1,112 @@
+CRC[0]=00000000
+CRC[1]=67f97b8c
+CRC[2]=67f97b8c
+CRC[3]=00000000
+CRC[4]=00000000
+CRC[5]=00000000
+CRC[6]=00000000
+CRC[7]=00000000
+CRC[8]=00000000
+CRC[9]=00000000
+CRC[10]=00000000
+CRC[11]=00000000
+CRC[12]=00000000
+CRC[13]=00000000
+CRC[14]=00000000
+CRC[15]=00000000
+CRC[16]=00000000
+CRC[17]=00000000
+CRC[18]=00000000
+CRC[19]=00000000
+CRC[20]=00000000
+CRC[21]=00000000
+CRC[22]=00000000
+CRC[23]=00000000
+CRC[24]=00000000
+CRC[25]=00000000
+CRC[26]=00000000
+CRC[27]=00000000
+CRC[28]=00000000
+CRC[29]=00000000
+CRC[30]=00000000
+CRC[31]=00000000
+NonaSuomy02: IsHuman:1  Color:LtBlue  ID:12  ActLike:England  Credits:10000  Power:0  Drain:0
+NonaSuomy01: IsHuman:1  Color:Orange  ID:13  ActLike:Germany  Credits:10000  Power:0  Drain:0
+-------------------- Multi1 Infantry -------------------
+COORD:18805e80   Facing:0   Mission:5   Type:0   Tgt:d000000 Speed:0 NavCom:0
+COORD:1c805a80   Facing:0   Mission:5   Type:2   Tgt:d000001 Speed:0 NavCom:0
+-------------------- Multi2 Infantry -------------------
+COORD:5a801f80   Facing:0   Mission:5   Type:0   Tgt:d000002 Speed:0 NavCom:0
+COORD:5a401f40   Facing:0   Mission:5   Type:2   Tgt:d000003 Speed:0 NavCom:0
+-------------------- Multi1 Units -------------------
+COORD:1c805e80   Facing:0   Facing2:0   Mission:5   Type:11   Tgt:1c000000
+COORD:20805c80   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c000001
+COORD:20805d80   Facing:0   Facing2:0   Mission:5   Type:3   Tgt:1c000002
+COORD:1e805a80   Facing:0   Facing2:0   Mission:5   Type:4   Tgt:1c000003
+COORD:19806280   Facing:0   Facing2:0   Mission:5   Type:8   Tgt:1c000004
+COORD:18806380   Facing:0   Facing2:0   Mission:5   Type:6   Tgt:1c000005
+COORD:1d805c80   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c000006
+COORD:1c805d80   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c000007
+-------------------- Multi2 Units -------------------
+COORD:5d802380   Facing:0   Facing2:0   Mission:5   Type:11   Tgt:1c000008
+COORD:5b802580   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c000009
+COORD:5a802580   Facing:0   Facing2:0   Mission:5   Type:3   Tgt:1c00000a
+COORD:60802580   Facing:0   Facing2:0   Mission:5   Type:4   Tgt:1c00000b
+COORD:61801f80   Facing:0   Facing2:0   Mission:5   Type:8   Tgt:1c00000c
+COORD:60801f80   Facing:0   Facing2:0   Mission:5   Type:6   Tgt:1c00000d
+COORD:5e802280   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c00000e
+COORD:5e802380   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c00000f
+-------------------- Multi1 Vessels -------------------
+-------------------- Multi2 Vessels -------------------
+-------------------- Multi1 Buildings -------------------
+-------------------- Multi2 Buildings -------------------
+-------------------- Animations -------------------
+>>>> MAP LAYER 0 <<<<
+>>>> MAP LAYER 1 <<<<
+Object 0: 18805e80 Infantry  (Type:0) Owner: Multi1
+Object 1: 18806380 Unit      (Type:6) Owner: Multi1
+Object 2: 19806280 Unit      (Type:8) Owner: Multi1
+Object 3: 1c805a80 Infantry  (Type:2) Owner: Multi1
+Object 4: 1c805d80 Unit      (Type:2) Owner: Multi1
+Object 5: 1c805e80 Unit      (Type:11) Owner: Multi1
+Object 6: 1d805c80 Unit      (Type:2) Owner: Multi1
+Object 7: 1e805a80 Unit      (Type:4) Owner: Multi1
+Object 8: 20805c80 Unit      (Type:2) Owner: Multi1
+Object 9: 20805d80 Unit      (Type:3) Owner: Multi1
+Object 10: 5a401f40 Infantry  (Type:2) Owner: Multi2
+Object 11: 5a801f80 Infantry  (Type:0) Owner: Multi2
+Object 12: 5a802580 Unit      (Type:3) Owner: Multi2
+Object 13: 5b802580 Unit      (Type:2) Owner: Multi2
+Object 14: 5d802380 Unit      (Type:11) Owner: Multi2
+Object 15: 5e802280 Unit      (Type:2) Owner: Multi2
+Object 16: 5e802380 Unit      (Type:2) Owner: Multi2
+Object 17: 60801f80 Unit      (Type:6) Owner: Multi2
+Object 18: 60802580 Unit      (Type:4) Owner: Multi2
+Object 19: 61801f80 Unit      (Type:8) Owner: Multi2
+>>>> MAP LAYER 2 <<<<
+>>>> MAP LAYER 3 <<<<
+>>>> LOGIC LAYER <<<<
+Object 0: 1c805e80 Unit      (Type:11) Owner: Multi1
+Object 1: 20805c80 Unit      (Type:2) Owner: Multi1
+Object 2: 20805d80 Unit      (Type:3) Owner: Multi1
+Object 3: 1e805a80 Unit      (Type:4) Owner: Multi1
+Object 4: 19806280 Unit      (Type:8) Owner: Multi1
+Object 5: 18806380 Unit      (Type:6) Owner: Multi1
+Object 6: 1d805c80 Unit      (Type:2) Owner: Multi1
+Object 7: 1c805d80 Unit      (Type:2) Owner: Multi1
+Object 8: 18805e80 Infantry  (Type:0) Owner: Multi1
+Object 9: 1c805a80 Infantry  (Type:2) Owner: Multi1
+Object 10: 5d802380 Unit      (Type:11) Owner: Multi2
+Object 11: 5b802580 Unit      (Type:2) Owner: Multi2
+Object 12: 5a802580 Unit      (Type:3) Owner: Multi2
+Object 13: 60802580 Unit      (Type:4) Owner: Multi2
+Object 14: 61801f80 Unit      (Type:8) Owner: Multi2
+Object 15: 60801f80 Unit      (Type:6) Owner: Multi2
+Object 16: 5e802280 Unit      (Type:2) Owner: Multi2
+Object 17: 5e802380 Unit      (Type:2) Owner: Multi2
+Object 18: 5a801f80 Infantry  (Type:0) Owner: Multi2
+Object 19: 5a401f40 Infantry  (Type:2) Owner: Multi2
+
+Random Number:f71bc7e4
+My Frame:2
+My CRC:67f97b8c
