@@ -1,0 +1,146 @@
+CRC[0]=00000000
+CRC[1]=a0510751
+CRC[2]=a0510751
+CRC[3]=a0510751
+CRC[4]=a0510751
+CRC[5]=a0510751
+CRC[6]=a0510751
+CRC[7]=a0510751
+CRC[8]=a0510751
+CRC[9]=a0510751
+CRC[10]=a0510751
+CRC[11]=a0510751
+CRC[12]=a0510751
+CRC[13]=a0510751
+CRC[14]=39d2eb0e
+CRC[15]=b388e674
+CRC[16]=d5c7c476
+CRC[17]=d5c7c476
+CRC[18]=d5c7c476
+CRC[19]=d5c7c476
+CRC[20]=d5c7c476
+CRC[21]=d5c7c476
+CRC[22]=d5c7c476
+CRC[23]=d5c7c476
+CRC[24]=d5c7c476
+CRC[25]=d5c7c476
+CRC[26]=d5c7c476
+CRC[27]=d5c7c476
+CRC[28]=00000000
+CRC[29]=00000000
+CRC[30]=00000000
+CRC[31]=00000000
+NonaSuomy02: IsHuman:1  Color:LtBlue  ID:12  ActLike:England  Credits:10000  Power:0  Drain:0
+NonaSuomy01: IsHuman:1  Color:Orange  ID:13  ActLike:Germany  Credits:10000  Power:0  Drain:0
+-------------------- Multi1 Infantry -------------------
+COORD:3e804b80   Facing:0   Mission:5   Type:0   Tgt:d000000 Speed:0 NavCom:0
+COORD:40804b80   Facing:0   Mission:5   Type:2   Tgt:d000001 Speed:0 NavCom:0
+-------------------- Multi2 Infantry -------------------
+COORD:2b803380   Facing:0   Mission:5   Type:0   Tgt:d000002 Speed:0 NavCom:0
+COORD:2d802b80   Facing:64   Mission:5   Type:2   Tgt:d000003 Speed:0 NavCom:0
+-------------------- Multi1 Units -------------------
+COORD:3d804880   Facing:0   Facing2:0   Mission:5   Type:11   Tgt:1c000000
+COORD:40804780   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c000001
+COORD:41804680   Facing:0   Facing2:0   Mission:5   Type:3   Tgt:1c000002
+COORD:41804780   Facing:0   Facing2:0   Mission:5   Type:4   Tgt:1c000003
+COORD:3f804480   Facing:0   Facing2:0   Mission:5   Type:8   Tgt:1c000004
+COORD:3e804480   Facing:0   Facing2:0   Mission:5   Type:6   Tgt:1c000005
+COORD:3b804a80   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c000006
+COORD:3a804980   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c000007
+-------------------- Multi2 Units -------------------
+COORD:29802f80   Facing:0   Facing2:0   Mission:5   Type:11   Tgt:1c000008
+COORD:2b803280   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c000009
+COORD:2a803380   Facing:0   Facing2:0   Mission:5   Type:3   Tgt:1c00000a
+COORD:26803080   Facing:0   Facing2:0   Mission:5   Type:4   Tgt:1c00000b
+COORD:2d803180   Facing:0   Facing2:0   Mission:5   Type:8   Tgt:1c00000c
+COORD:2c803180   Facing:0   Facing2:0   Mission:5   Type:6   Tgt:1c00000d
+COORD:29802e80   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c00000e
+COORD:2a802f80   Facing:0   Facing2:0   Mission:5   Type:2   Tgt:1c00000f
+-------------------- Multi1 Vessels -------------------
+-------------------- Multi2 Vessels -------------------
+-------------------- Multi1 Buildings -------------------
+-------------------- Multi2 Buildings -------------------
+-------------------- Animations -------------------
+>>>> MAP LAYER 0 <<<<
+>>>> MAP LAYER 1 <<<<
+Object 0: 23003f00 Terrain   (Type:18) Owner: NONE
+Object 1: 26803080 Unit      (Type:4) Owner: Multi2
+Object 2: 25003e00 Terrain   (Type:19) Owner: NONE
+Object 3: 29802e80 Unit      (Type:2) Owner: Multi2
+Object 4: 29802f80 Unit      (Type:11) Owner: Multi2
+Object 5: 2a802f80 Unit      (Type:2) Owner: Multi2
+Object 6: 2a803380 Unit      (Type:3) Owner: Multi2
+Object 7: 2b803380 Infantry  (Type:0) Owner: Multi2
+Object 8: 2b803280 Unit      (Type:2) Owner: Multi2
+Object 9: 2c005200 Terrain   (Type:34) Owner: NONE
+Object 10: 2c803180 Unit      (Type:6) Owner: Multi2
+Object 11: 2d802b80 Infantry  (Type:2) Owner: Multi2
+Object 12: 2d803180 Unit      (Type:8) Owner: Multi2
+Object 13: 2d003700 Terrain   (Type:18) Owner: NONE
+Object 14: 2e003800 Terrain   (Type:19) Owner: NONE
+Object 15: 2f003700 Terrain   (Type:15) Owner: NONE
+Object 16: 31004500 Terrain   (Type:18) Owner: NONE
+Object 17: 32004600 Terrain   (Type:15) Owner: NONE
+Object 18: 33003f00 Terrain   (Type:16) Owner: NONE
+Object 19: 34003f00 Terrain   (Type:19) Owner: NONE
+Object 20: 37002800 Terrain   (Type:19) Owner: NONE
+Object 21: 38003500 Terrain   (Type:13) Owner: NONE
+Object 22: 39003100 Terrain   (Type:17) Owner: NONE
+Object 23: 3a804980 Unit      (Type:2) Owner: Multi1
+Object 24: 3b804a80 Unit      (Type:2) Owner: Multi1
+Object 25: 3d005200 Terrain   (Type:34) Owner: NONE
+Object 26: 3d804880 Unit      (Type:11) Owner: Multi1
+Object 27: 3e804b80 Infantry  (Type:0) Owner: Multi1
+Object 28: 3e804480 Unit      (Type:6) Owner: Multi1
+Object 29: 3f804480 Unit      (Type:8) Owner: Multi1
+Object 30: 40804b80 Infantry  (Type:2) Owner: Multi1
+Object 31: 40804780 Unit      (Type:2) Owner: Multi1
+Object 32: 41804680 Unit      (Type:3) Owner: Multi1
+Object 33: 41804780 Unit      (Type:4) Owner: Multi1
+Object 34: 45003a00 Terrain   (Type:17) Owner: NONE
+Object 35: 4d002d00 Terrain   (Type:34) Owner: NONE
+Object 36: 4e003c00 Terrain   (Type:19) Owner: NONE
+>>>> MAP LAYER 2 <<<<
+>>>> MAP LAYER 3 <<<<
+>>>> LOGIC LAYER <<<<
+Object 0: 2e003800 Terrain   (Type:19) Owner: NONE
+Object 1: 2d003700 Terrain   (Type:18) Owner: NONE
+Object 2: 2f003700 Terrain   (Type:15) Owner: NONE
+Object 3: 38003500 Terrain   (Type:13) Owner: NONE
+Object 4: 4d002d00 Terrain   (Type:34) Owner: NONE
+Object 5: 2c005200 Terrain   (Type:34) Owner: NONE
+Object 6: 3d005200 Terrain   (Type:34) Owner: NONE
+Object 7: 4e003c00 Terrain   (Type:19) Owner: NONE
+Object 8: 45003a00 Terrain   (Type:17) Owner: NONE
+Object 9: 37002800 Terrain   (Type:19) Owner: NONE
+Object 10: 39003100 Terrain   (Type:17) Owner: NONE
+Object 11: 25003e00 Terrain   (Type:19) Owner: NONE
+Object 12: 23003f00 Terrain   (Type:18) Owner: NONE
+Object 13: 31004500 Terrain   (Type:18) Owner: NONE
+Object 14: 34003f00 Terrain   (Type:19) Owner: NONE
+Object 15: 33003f00 Terrain   (Type:16) Owner: NONE
+Object 16: 32004600 Terrain   (Type:15) Owner: NONE
+Object 17: 3d804880 Unit      (Type:11) Owner: Multi1
+Object 18: 40804780 Unit      (Type:2) Owner: Multi1
+Object 19: 41804680 Unit      (Type:3) Owner: Multi1
+Object 20: 41804780 Unit      (Type:4) Owner: Multi1
+Object 21: 3f804480 Unit      (Type:8) Owner: Multi1
+Object 22: 3e804480 Unit      (Type:6) Owner: Multi1
+Object 23: 3b804a80 Unit      (Type:2) Owner: Multi1
+Object 24: 3a804980 Unit      (Type:2) Owner: Multi1
+Object 25: 3e804b80 Infantry  (Type:0) Owner: Multi1
+Object 26: 40804b80 Infantry  (Type:2) Owner: Multi1
+Object 27: 29802f80 Unit      (Type:11) Owner: Multi2
+Object 28: 2b803280 Unit      (Type:2) Owner: Multi2
+Object 29: 2a803380 Unit      (Type:3) Owner: Multi2
+Object 30: 26803080 Unit      (Type:4) Owner: Multi2
+Object 31: 2d803180 Unit      (Type:8) Owner: Multi2
+Object 32: 2c803180 Unit      (Type:6) Owner: Multi2
+Object 33: 29802e80 Unit      (Type:2) Owner: Multi2
+Object 34: 2a802f80 Unit      (Type:2) Owner: Multi2
+Object 35: 2b803380 Infantry  (Type:0) Owner: Multi2
+Object 36: 2d802b80 Infantry  (Type:2) Owner: Multi2
+
+Random Number:4bad60d3
+My Frame:27
+My CRC:d5c7c476
