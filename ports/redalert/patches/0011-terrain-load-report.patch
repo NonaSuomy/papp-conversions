@@ -1,5 +1,5 @@
 diff --git a/redalert/terrain.cpp b/redalert/terrain.cpp
-index 999f15c..c0a9b63 100644
+index 999f15c..2cc3111 100644
 --- a/redalert/terrain.cpp
 +++ b/redalert/terrain.cpp
 @@ -729,6 +729,8 @@ void TerrainClass::Read_INI(CCINIClass& ini)
@@ -11,7 +11,7 @@ index 999f15c..c0a9b63 100644
  
      for (int index = 0; index < len; index++) {
          char const* entry = ini.Get_Entry(INI_Name(), index);
-@@ -736,9 +738,31 @@ void TerrainClass::Read_INI(CCINIClass& ini)
+@@ -736,9 +738,40 @@ void TerrainClass::Read_INI(CCINIClass& ini)
          CELL cell = atoi(entry);
  
          if (terrain != TERRAIN_NONE) {
@@ -32,14 +32,23 @@ index 999f15c..c0a9b63 100644
 +            unknown++;
          }
      }
-+    fprintf(stderr,
-+            "SYNC terrain: %d entries, %d placed, %d rejected, %d unknown types, map theater %d, TerrainMax %d\n",
-+            len,
-+            placed,
-+            rejected,
-+            unknown,
-+            (int)Scen.Theater,
-+            Rule.TerrainMax);
++    char report[160];
++    snprintf(report,
++             sizeof(report),
++             "SYNC terrain: %d entries, %d placed, %d rejected, %d unknown types, map theater %d, TerrainMax %d\n",
++             len,
++             placed,
++             rejected,
++             unknown,
++             (int)Scen.Theater,
++             Rule.TerrainMax);
++    fputs(report, stderr);
++    // Also in TERRAIN.TXT (the writable data directory), for devices without a console.
++    CDFileClass out("TERRAIN.TXT");
++    if (out.Open(WRITE)) {
++        out.Write(report, strlen(report));
++        out.Close();
++    }
  }
  
  /***********************************************************************************************
