@@ -1,5 +1,5 @@
 diff --git a/redalert/queue.cpp b/redalert/queue.cpp
-index ed429d8..39ff590 100644
+index ed429d8..90ef607 100644
 --- a/redalert/queue.cpp
 +++ b/redalert/queue.cpp
 @@ -201,7 +201,10 @@ static void Queue_Playback(void);
@@ -14,7 +14,7 @@ index ed429d8..39ff590 100644
  static void Init_Queue_Mono(ConnManClass* net);
  static void Update_Queue_Mono(ConnManClass* net, int flow_index);
  static void Print_Framesync_Values(int curframe,
-@@ -624,6 +627,21 @@ static void Queue_AI_Multiplayer(void)
+@@ -624,6 +627,25 @@ static void Queue_AI_Multiplayer(void)
      Compute_Game_CRC();
      CRC[Frame & 0x001f] = GameCRC;
  
@@ -22,6 +22,9 @@ index ed429d8..39ff590 100644
 +    //	Sync debugging: with [SyncBug] PrintCRC=N in the INI every player writes
 +    // DESYNCLOG.TXT at frame N, so two machines' states can be compared.
 +    //------------------------------------------------------------------------
++    // Print_CRCs recomputes GameCRC as it writes, and this frame's FRAMEINFO
++    // event still has to send the real one, so keep it.
++    unsigned int frame_crc = GameCRC;
 +    if (Frame == Session.TrapPrintCRC) {
 +        Print_CRCs(NULL);
 +    }
@@ -32,11 +35,12 @@ index ed429d8..39ff590 100644
 +            Print_CRCs(NULL, name);
 +        }
 +    }
++    GameCRC = frame_crc;
 +
      //------------------------------------------------------------------------
      //	If we've just started a game, or loaded a multiplayer game, we must
      // wait for all other systems to signal ready.
-@@ -3716,7 +3734,7 @@ void Add_CRC(unsigned int* crc, unsigned int val)
+@@ -3716,7 +3738,7 @@ void Add_CRC(unsigned int* crc, unsigned int val)
   * HISTORY:                                                                *
   *   05/09/1995 BRR : Created.                                             *
   *=========================================================================*/
@@ -45,7 +49,7 @@ index ed429d8..39ff590 100644
  {
      int i, j;
      InfantryClass* infp;
-@@ -3732,7 +3750,7 @@ static void Print_CRCs(EventClass* ev)
+@@ -3732,7 +3754,7 @@ static void Print_CRCs(EventClass* ev)
      Mono_Clear_Screen();
      Mono_Set_Cursor(0, 0);
      CDFileClass fc;
@@ -54,7 +58,7 @@ index ed429d8..39ff590 100644
      if (!fc.Is_Available()) {
          return;
      }
-@@ -3753,12 +3771,15 @@ static void Print_CRCs(EventClass* ev)
+@@ -3753,12 +3775,15 @@ static void Print_CRCs(EventClass* ev)
              color = housep->RemapColor;
              snprintf(buffer,
                       sizeof(buffer),
@@ -72,7 +76,7 @@ index ed429d8..39ff590 100644
              fc.Write(buffer, strlen(buffer));
              Add_CRC(&GameCRC, (int)housep->Credits + (int)housep->Power + (int)housep->Drain);
              Mono_Printf("House %s:%x\n", housep->Class->Name(), GameCRC);
-@@ -4048,6 +4069,8 @@ static void Print_CRCs(EventClass* ev)
+@@ -4048,6 +4073,8 @@ static void Print_CRCs(EventClass* ev)
      Mono_Printf("My Frame:%d  \n", Frame);
      snprintf(buffer, sizeof(buffer), "My Frame:%d\n", Frame);
      fc.Write(buffer, strlen(buffer));
