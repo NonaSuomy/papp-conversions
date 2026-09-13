@@ -1,0 +1,45 @@
+diff --git a/redalert/terrain.cpp b/redalert/terrain.cpp
+index 999f15c..c0a9b63 100644
+--- a/redalert/terrain.cpp
++++ b/redalert/terrain.cpp
+@@ -729,6 +729,8 @@ void TerrainClass::Read_INI(CCINIClass& ini)
+     TerrainClass* tptr;
+ 
+     int len = ini.Entry_Count(INI_Name());
++    // Sync debugging: report how the scenario's terrain was placed.
++    int unknown = 0, placed = 0, rejected = 0;
+ 
+     for (int index = 0; index < len; index++) {
+         char const* entry = ini.Get_Entry(INI_Name(), index);
+@@ -736,9 +738,31 @@ void TerrainClass::Read_INI(CCINIClass& ini)
+         CELL cell = atoi(entry);
+ 
+         if (terrain != TERRAIN_NONE) {
++            int before = Terrains.Count();
+             tptr = new TerrainClass(terrain, cell);
++            if (Terrains.Count() > before) {
++                placed++;
++            } else if (rejected++ < 5) {
++                fprintf(stderr,
++                        "SYNC terrain: %s at cell %d not placed (object %s, theater mask %x, map theater %d)\n",
++                        TerrainTypeClass::As_Reference(terrain).IniName,
++                        cell,
++                        tptr ? "created" : "not created",
++                        TerrainTypeClass::As_Reference(terrain).Theater,
++                        (int)Scen.Theater);
++            }
++        } else {
++            unknown++;
+         }
+     }
++    fprintf(stderr,
++            "SYNC terrain: %d entries, %d placed, %d rejected, %d unknown types, map theater %d, TerrainMax %d\n",
++            len,
++            placed,
++            rejected,
++            unknown,
++            (int)Scen.Theater,
++            Rule.TerrainMax);
+ }
+ 
+ /***********************************************************************************************
