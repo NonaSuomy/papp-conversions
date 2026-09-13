@@ -1,0 +1,1 @@
+SYNC terrain: 17 entries, 17 placed, 0 rejected, 0 unknown types, map theater 0, TerrainMax 500
