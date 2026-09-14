@@ -1,0 +1,27 @@
+diff --git a/components/openlara/src/gapi/sw.h b/components/openlara/src/gapi/sw.h
+index c89832d..31d04b5 100644
+--- a/components/openlara/src/gapi/sw.h
++++ b/components/openlara/src/gapi/sw.h
+@@ -1024,6 +1024,22 @@ namespace GAPI {
+         const int ia = 256 - a;
+         if (a == 0) return;
+ 
++        // An opaque picture owns the whole screen: black around it. A video
++        // draws nothing else, so nothing clears the frame, and the port's two
++        // back buffers kept whatever was there before (a widescreen video's
++        // bars flashed between the loading screen and black).
++        if (a >= 256) {
++            for (int y = 0; y < Core::height; y++) {
++                ColorSW *line = swColor + y * Core::width;
++                if (y < y0 || y >= y1) {
++                    memset(line, 0, Core::width * sizeof(ColorSW));
++                } else {
++                    memset(line, 0, x0 * sizeof(ColorSW));
++                    memset(line + x1, 0, (Core::width - x1) * sizeof(ColorSW));
++                }
++            }
++        }
++
+         for (int y = y0; y < y1; y++) {
+             const int syi = clamp(((y - offY) * origH) / drawH, 0, origH - 1);
+             const uint8 *row = mem + syi * texW * 4;

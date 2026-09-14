@@ -29,3 +29,67 @@ index d37a75d..3b4e65c 100644
  
          if (playLogo) {
              playLogo = false;
+diff --git a/components/openlara/src/video.h b/components/openlara/src/video.h
+index 6f0de10..4b01651 100644
+--- a/components/openlara/src/video.h
++++ b/components/openlara/src/video.h
+@@ -200,6 +200,7 @@ struct Video {
+         } codebook[3];
+ 
+         Escape(Stream *stream) : Decoder(stream), audioDecoder(NULL), prevFrame(NULL), nextFrame(NULL), lumaFrame(NULL), chunks(NULL) {
++            int tEscape = Core::getTime();  // temporary (PAPP)
+             for (int i = 0; i < 4; i++)
+                 skipLine();
+ 
+@@ -231,6 +232,7 @@ struct Video {
+                 chunks[i].data      = NULL;
+             }
+ 
++            int tCatalog = Core::getTime();
+             switch (vfmt) {
+                 case 124 :
+                     prevFrame = new uint8[width * height * 4];
+@@ -258,7 +260,10 @@ struct Video {
+             curVideoPos   = curAudioPos   = 0;
+             curVideoChunk = curAudioChunk = 0;
+ 
++            int tChunk = Core::getTime();
+             nextChunk(0, 0);
++            LOG("OL: escape %d: header and %d-chunk catalog %d ms, buffers %d ms, first chunk %d ms\n", vfmt,
++                chunksCount, tCatalog - tEscape, tChunk - tCatalog, Core::getTime() - tChunk);
+ 
+         #ifdef NO_SOUND
+             audioDecoder = NULL;
+@@ -1491,6 +1496,7 @@ struct Video {
+ 
+         if (!stream) return;
+ 
++        int tStart = Core::getTime();  // temporary (PAPP): where opening a video goes
+         uint32 magic = stream->readLE32();
+         stream->seek(-4);
+ 
+@@ -1508,6 +1514,7 @@ struct Video {
+             decoder = new STR(stream);
+         }
+ 
++        int tDecoder = Core::getTime();
+         frameData = new Color32[decoder->width * decoder->height];
+         memset(frameData, 0, decoder->width * decoder->height * sizeof(Color32));
+ 
+@@ -1515,6 +1522,7 @@ struct Video {
+             frameTex[i] = new Texture(decoder->width, decoder->height, 1, FMT_RGBA, OPT_DYNAMIC, frameData);
+         }
+ 
++        int tTextures = Core::getTime();
+         if (!TR::getVideoTrack(id, playAsync, this)) {
+             sample = Sound::play(decoder);
+             sample->pitch = pitch;
+@@ -1523,6 +1531,8 @@ struct Video {
+             }
+         }
+ 
++        LOG("OL: video %dx%d: decoder %d ms, textures %d ms, sound %d ms\n", decoder->width, decoder->height,
++            tDecoder - tStart, tTextures - tDecoder, Core::getTime() - tTextures);
+         step      = 1.0f / decoder->fps;
+         stepTimer = step;
+         time      = 0.0f;

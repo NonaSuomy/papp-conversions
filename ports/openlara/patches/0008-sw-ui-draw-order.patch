@@ -1,0 +1,18 @@
+diff --git a/components/openlara/src/gapi/sw.h b/components/openlara/src/gapi/sw.h
+index 504c41e..c89832d 100644
+--- a/components/openlara/src/gapi/sw.h
++++ b/components/openlara/src/gapi/sw.h
+@@ -256,7 +256,12 @@ namespace GAPI {
+               palette(swPalette), lightmap(swLightmap), clip(swClipRect) {}
+ 
+         static int cmp(const FaceSW &a, const FaceSW &b) {
+-            return int32(b.z) - int32(a.z);
++            if (a.z != b.z)
++                return int32(b.z) - int32(a.z);
++            // Equal depth (all UI quads): keep the order they were drawn in.
++            // The quicksort is not stable, so a bar's black box could land
++            // on top of its fill (the black volume bars).
++            return int32(a.index) - int32(b.index);
+         }
+     };
+ 
