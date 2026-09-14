@@ -398,13 +398,35 @@ extern "C" int papp_openlara_run(void)
             break;
         }
         GAPI::swColor = papp_video_back();
+        // Temporary: where a frame's time goes, to find the video lag.
+        static long long t_update = 0, t_render = 0, t_present = 0, t_audio = 0, t_window = 0;
+        static int t_frames = 0;
+        const long long t0 = papp_time_us();
         if (Game::update()) {
+            const long long t1 = papp_time_us();
             Game::render();
+            const long long t2 = papp_time_us();
             draw_bars(papp_video_back());
             papp_video_present();
+            t_update += t1 - t0;
+            t_render += t2 - t1;
+            t_present += papp_time_us() - t2;
+            t_frames++;
             frames++;
         }
+        const long long t3 = papp_time_us();
         pump_audio();
+        t_audio += papp_time_us() - t3;
+        if (t_window == 0) {
+            t_window = t3;
+        } else if (t3 - t_window >= 2000000 && t_frames > 0) {
+            papp_svc->log_printf("OL: %d frames in %d ms; per frame: update %d us, render %d us, present %d us, audio %d us\n",
+                                 t_frames, (int)((t3 - t_window) / 1000), (int)(t_update / t_frames),
+                                 (int)(t_render / t_frames), (int)(t_present / t_frames), (int)(t_audio / t_frames));
+            t_update = t_render = t_present = t_audio = 0;
+            t_frames = 0;
+            t_window = t3;
+        }
         if (now - last_log >= 60000000) {
             if (last_log != 0) {
                 papp_svc->log_printf("OL: %d fps\n", (int)(frames * 1000000LL / (now - last_log)));

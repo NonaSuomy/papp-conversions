@@ -1,0 +1,17 @@
+diff --git a/components/openlara/src/gapi/sw.h b/components/openlara/src/gapi/sw.h
+index ae915e1..1813861 100644
+--- a/components/openlara/src/gapi/sw.h
++++ b/components/openlara/src/gapi/sw.h
+@@ -767,7 +767,11 @@ namespace GAPI {
+             result.v = (v.src.texCoord.y << 16);// / result.w;
+         }
+         result.w = result.w << 16;
+-        result.l = ((v.src.light.x * ambient) >> 8);
++        // Shading is grey here, so take the brightest channel: UI bars pass
++        // their colour as the light (the SFX bar's 0xFFFF8000 has no red and
++        // came out black). TR1's vertex light is grey, so 3D is unchanged.
++        const uint8 bright = max(v.src.light.x, max(v.src.light.y, v.src.light.z));
++        result.l = ((bright * ambient) >> 8);
+ 
+         applyLighting(result, v.src, c.w);
+ 
