@@ -1,0 +1,31 @@
+diff --git a/components/openlara/src/inventory.h b/components/openlara/src/inventory.h
+index d37a75d..3b4e65c 100644
+--- a/components/openlara/src/inventory.h
++++ b/components/openlara/src/inventory.h
+@@ -587,11 +587,15 @@ struct Inventory {
+     static void loadVideo(Stream *stream, void *userData) {
+         Inventory *inv = (Inventory*)userData;
+         TR::LevelID id = inv->game->getLevel()->id;
++        // Temporary (PAPP): time opening a video and its title picture.
++        int t0 = Core::getTime();
+         if (stream) {
+             inv->video = new Video(stream, id);
+             UI::showSubs(getVideoSubs(id));
+         }
++        int t1 = Core::getTime();
+         new Stream(TR::getGameScreen(id), loadTitleBG, inv);
++        LOG("OL: video opened in %d ms, title picture in %d ms\n", t1 - t0, Core::getTime() - t1);
+     }
+ 
+     static void loadLogo(Stream *stream, void *userData) {
+@@ -1105,8 +1109,10 @@ struct Inventory {
+     };
+ 
+     void skipVideo() {
++        int t0 = Core::getTime();  // temporary (PAPP)
+         delete video;
+         video = NULL;
++        LOG("OL: video closed in %d ms\n", Core::getTime() - t0);
+ 
+         if (playLogo) {
+             playLogo = false;

@@ -1,0 +1,126 @@
+diff --git a/components/openlara/src/gapi/sw.h b/components/openlara/src/gapi/sw.h
+index 1813861..504c41e 100644
+--- a/components/openlara/src/gapi/sw.h
++++ b/components/openlara/src/gapi/sw.h
+@@ -179,8 +179,8 @@ namespace GAPI {
+ 
+     // Deferred full-RGBA background blit (title/loading screen), honored in
+     // endFrame() so it survives the mid-frame deferred target clear.
+-    // Up to two per frame: a video frame is drawn as the current picture and
+-    // then the next one faded in on top; keeping only the last made it flash.
++    // Up to two per frame: a video frame comes as the current picture and
++    // the next one fading in on top (doPendingTitleBlit shows the nearer).
+     struct PendingTitle {
+         Texture *tex;
+         float   sx, sy;
+@@ -946,8 +946,18 @@ namespace GAPI {
+     void doOneTitleBlit(PendingTitle &pendingTitle);
+ 
+     void doPendingTitleBlit() {
+-        for (int i = 0; i < pendingTitleCount; i++)
+-            doOneTitleBlit(pendingTitles[i]);
++        if (pendingTitleCount == 2 && pendingTitles[0].tex && pendingTitles[1].tex) {
++            // A video frame: blending the next picture over the current one
++            // doubled the cost of a frame in software. Show the nearer one,
++            // opaque (showing only the faded-in layer over black flashed).
++            PendingTitle &shown = pendingTitles[1].alpha >= 128 ? pendingTitles[1] : pendingTitles[0];
++            shown.alpha = 255;
++            doOneTitleBlit(shown);
++            pendingTitles[0].tex = pendingTitles[1].tex = NULL;
++        } else {
++            for (int i = 0; i < pendingTitleCount; i++)
++                doOneTitleBlit(pendingTitles[i]);
++        }
+         pendingTitleCount = 0;
+     }
+ 
+@@ -995,50 +1005,48 @@ namespace GAPI {
+         int x1 = x0 + drawW; if (x1 > Core::width)  x1 = Core::width;
+         int y1 = y0 + drawH; if (y1 > Core::height) y1 = Core::height;
+ 
+-        for (int y = y0; y < y1; y++) {
+-            int syi = int(((y - (Core::height - drawH) / 2) * origH) / drawH);
+-            if (syi < 0) syi = 0;
+-            if (syi >= origH) syi = origH - 1;
++        // The source column of each screen column, worked out once per blit:
++        // a division per pixel cost more than decoding the video frame.
++        static int16 colMap[1024];
++        const int cols = x1 - x0;
++        if (cols > 1024) return;  // wider than any PAPP canvas
++        const int offX = (Core::width - drawW) / 2;
++        const int offY = (Core::height - drawH) / 2;
++        for (int i = 0; i < cols; i++)
++            colMap[i] = int16(clamp(((x0 + i - offX) * origW) / drawW, 0, origW - 1));
++        // Blend weight out of 256; 255 maps to 256 so opaque stays exact.
++        const int a = alpha + (alpha >> 7);
++        const int ia = 256 - a;
++        if (a == 0) return;
+ 
++        for (int y = y0; y < y1; y++) {
++            const int syi = clamp(((y - offY) * origH) / drawH, 0, origH - 1);
+             const uint8 *row = mem + syi * texW * 4;
+-            ColorSW *dst = swColor + y * Core::width;
+-
+-            for (int x = x0; x < x1; x++) {
+-                int sxi = int(((x - (Core::width - drawW) / 2) * origW) / drawW);
+-                if (sxi < 0) sxi = 0;
+-                if (sxi >= origW) sxi = origW - 1;
+-
+-                const uint8 *p = row + sxi * 4;
+-
+-                if (alpha >= 255) {
+-                    dst[x] = CONV_COLOR(p[0], p[1], p[2]);
+-                } else {
+-                    ColorSW bg = dst[x];
+-                    #ifdef COLOR_FMT_565
+-                        int br = (bg >> 11) & 0x1F;
+-                        int bgc = (bg >> 5) & 0x3F;
+-                        int bb = bg & 0x1F;
+-                        int fr = (p[0] >> 3);
+-                        int fg = (p[1] >> 2);
+-                        int fb = (p[2] >> 3);
+-                        int a = alpha;
+-                        int ia = 255 - a;
+-                        int r = (fr * a + br * ia) / 255;
+-                        int g = (fg * a + bgc * ia) / 255;
+-                        int b = (fb * a + bb * ia) / 255;
+-                        dst[x] = (r << 11) | (g << 5) | b;
+-                    #else
+-                        int br = (bg >> 10) & 0x1F;
+-                        int bgc = (bg >> 5) & 0x1F;
+-                        int bb = bg & 0x1F;
+-                        int a = alpha;
+-                        int ia = 255 - a;
+-                        dst[x] = CONV_COLOR(
+-                            (p[0] * a + (br << 3) * ia) / 255,
+-                            (p[1] * a + (bgc << 3) * ia) / 255,
+-                            (p[2] * a + (bb << 3) * ia) / 255);
+-                    #endif
++            ColorSW *dst = swColor + y * Core::width + x0;
++
++            if (a >= 256) {
++                for (int i = 0; i < cols; i++) {
++                    const uint8 *p = row + colMap[i] * 4;
++                    dst[i] = CONV_COLOR(p[0], p[1], p[2]);
+                 }
++                continue;
++            }
++            for (int i = 0; i < cols; i++) {
++                const uint8 *p = row + colMap[i] * 4;
++                const ColorSW bg = dst[i];
++                #ifdef COLOR_FMT_565
++                    const int r = ((p[0] >> 3) * a + ((bg >> 11) & 0x1F) * ia) >> 8;
++                    const int g = ((p[1] >> 2) * a + ((bg >> 5) & 0x3F) * ia) >> 8;
++                    const int b = ((p[2] >> 3) * a + (bg & 0x1F) * ia) >> 8;
++                    dst[i] = ColorSW((r << 11) | (g << 5) | b);
++                #else
++                    const int br = (bg >> 10) & 0x1F;
++                    const int bgc = (bg >> 5) & 0x1F;
++                    const int bb = bg & 0x1F;
++                    dst[i] = CONV_COLOR((p[0] * a + (br << 3) * ia) >> 8,
++                                        (p[1] * a + (bgc << 3) * ia) >> 8,
++                                        (p[2] * a + (bb << 3) * ia) >> 8);
++                #endif
+             }
+         }
+     }
