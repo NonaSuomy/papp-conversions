@@ -468,9 +468,11 @@ void Render::renderSprites()
 
 // Called at the top of every runtime step (Scratch::stepScratchProject). The
 // runtime only reads input and draws when a frame is due (checkFramerate)
-// but otherwise keeps running scripts; like Scratch's own sequencer, scripts
-// get at most 3/4 of a frame, and none when they wait for the next redraw
-// or there are none: then the app task sleeps until the next frame is due.
+// but otherwise keeps running scripts. Like Scratch's own sequencer (which
+// works for 3/4 of a frame), scripts get a budget of the frame, and none
+// when they wait for the next redraw or there are none: then the app task
+// sleeps until the next frame is due. The budget leaves at least one
+// FreeRTOS tick (10 ms) of real sleep per frame for the other tasks.
 bool Render::appShouldRun()
 {
     if (OS::toExit) {
@@ -490,7 +492,8 @@ bool Render::appShouldRun()
     if (!Scratch::turbo && Scratch::FPS > 0) {
         const long long frame = 1000000LL / Scratch::FPS;
         const long long due = s_last_frame_us + frame;
-        if (Scratch::forceRedraw || BlockExecutor::threads.empty() || now - s_last_frame_us > frame * 3 / 4) {
+        const long long budget = std::max(frame / 2, frame - 12000);
+        if (Scratch::forceRedraw || BlockExecutor::threads.empty() || now - s_last_frame_us > budget) {
             wait_until(due);
         }
     }
