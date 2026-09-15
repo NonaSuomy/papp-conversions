@@ -1,0 +1,47 @@
+name: Scratch host test
+
+# Builds the Scratch Everywhere! PAPP (apps/psram_scratch, ports/scratch) for
+# Linux with a fake loader and runs its test project with scripted input:
+# the runtime, the software renderer and the port's input/audio glue, from
+# the same pinned sources and patches as the .papp
+# (apps/psram_scratch/tests/host/run_host_test.py).
+on:
+  push:
+    branches: [main]
+    paths: ["ports/scratch/**", "apps/psram_scratch/**", "tools/build_papp.py", ".github/workflows/scratch-host-test.yml"]
+  pull_request:
+    paths: ["ports/scratch/**", "apps/psram_scratch/**", "tools/build_papp.py", ".github/workflows/scratch-host-test.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache upstream sources
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: scratch-host-${{ hashFiles('apps/psram_scratch/papp.json', 'ports/scratch/patches/**') }}
+          restore-keys: scratch-host-
+
+      # The app reads its projects from /sd/scratch/, as on the device.
+      - name: Project folder
+        run: sudo mkdir -p /sd/scratch && sudo chown -R "$(id -u):$(id -g)" /sd
+
+      - name: Build and run
+        run: python3 apps/psram_scratch/tests/host/run_host_test.py --out "$RUNNER_TEMP/scratch-host"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scratch-host-frames
+          path: ${{ runner.temp }}/scratch-host/*.png
+          if-no-files-found: ignore

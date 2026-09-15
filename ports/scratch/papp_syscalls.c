@@ -594,6 +594,27 @@ int pthread_mutex_lock(void *mutex) { (void)mutex; return 0; }
 int pthread_mutex_trylock(void *mutex) { (void)mutex; return 0; }
 int pthread_mutex_unlock(void *mutex) { (void)mutex; return 0; }
 
+// Condition variables: nothing ever waits (one task), so these never block.
+int pthread_cond_init(void *cond, const void *attr) { (void)cond; (void)attr; return 0; }
+int pthread_cond_destroy(void *cond) { (void)cond; return 0; }
+int pthread_cond_wait(void *cond, void *mutex) { (void)cond; (void)mutex; return 0; }
+int pthread_cond_signal(void *cond) { (void)cond; return 0; }
+int pthread_cond_broadcast(void *cond) { (void)cond; return 0; }
+int pthread_mutexattr_init(void *attr) { (void)attr; return 0; }
+int pthread_mutexattr_settype(void *attr, int type) { (void)attr; (void)type; return 0; }
+int pthread_mutexattr_destroy(void *attr) { (void)attr; return 0; }
+
+// newlib's pthread_once_t is {is_initialized, init_executed}.
+int pthread_once(void *once, void (*init)(void))
+{
+    int *state = (int *)once;
+    if (!state[1]) {
+        state[1] = 1;
+        init();
+    }
+    return 0;
+}
+
 #define MAX_KEYS 16
 static const void *s_key_values[MAX_KEYS];
 static unsigned long s_keys_used;
