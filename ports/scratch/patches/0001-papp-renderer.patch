@@ -1,0 +1,73 @@
+PAPP renderer backend hooks
+
+Scratch Everywhere! picks its image and text classes, and the byte order of
+Math::color, with a chain of RENDERER_* checks. Add RENDERER_PAPP (the
+software renderer in ports/scratch) to each: Image_Papp, TextObjectPapp,
+and 0xRRGGBBAA colours as the SDL and OpenGL renderers use.
+
+diff --git a/source/image.cpp b/source/image.cpp
+index a0418f96..b5a01189 100644
+--- a/source/image.cpp
++++ b/source/image.cpp
+@@ -32,6 +32,8 @@
+ #include <image_gl_core.hpp>
+ #elif defined(RENDERER_HEADLESS)
+ #include <image_headless.hpp>
++#elif defined(RENDERER_PAPP)
++#include <image_papp.hpp>
+ #endif
+ 
+ #ifdef USE_CMAKERC
+@@ -101,6 +103,8 @@ nonstd::expected<std::shared_ptr<Image>, std::string> createImageFromFile(std::s
+     Image *rawImg = new Image_GLCore(filePath, fromScratchProject, bitmapHalfQuality, scale);
+ #elif defined(RENDERER_HEADLESS)
+     Image *rawImg = new Image_Headless(filePath, fromScratchProject, bitmapHalfQuality, scale);
++#elif defined(RENDERER_PAPP)
++    Image *rawImg = new Image_Papp(filePath, fromScratchProject, bitmapHalfQuality, scale);
+ #else
+ #error "Image backend not defined."
+ #endif
+@@ -146,6 +150,8 @@ nonstd::expected<std::shared_ptr<Image>, std::string> createImageFromZip(std::st
+     Image *rawImg = new Image_GLCore(filePath, zip, bitmapHalfQuality, scale);
+ #elif defined(RENDERER_HEADLESS)
+     Image *rawImg = new Image_Headless(filePath, zip, bitmapHalfQuality, scale);
++#elif defined(RENDERER_PAPP)
++    Image *rawImg = new Image_Papp(filePath, zip, bitmapHalfQuality, scale);
+ #else
+ #error "Image backend not defined."
+ #endif
+diff --git a/source/runtime/math.cpp b/source/runtime/math.cpp
+index ada98f7b..35b61d02 100644
+--- a/source/runtime/math.cpp
++++ b/source/runtime/math.cpp
+@@ -29,7 +29,7 @@ int Math::color(int r, int g, int b, int a) {
+     int g5 = g >> 3;
+     int b5 = b >> 3;
+     return RGB15(r5, g5, b5);
+-#elif defined(RENDERER_SDL1) || defined(RENDERER_SDL2) || defined(RENDERER_SDL3) || defined(RENDERER_OPENGL) || defined(RENDERER_OPENGL_CORE)
++#elif defined(RENDERER_SDL1) || defined(RENDERER_SDL2) || defined(RENDERER_SDL3) || defined(RENDERER_OPENGL) || defined(RENDERER_OPENGL_CORE) || defined(RENDERER_PAPP)
+     return (r << 24) |
+            (g << 16) |
+            (b << 8) |
+diff --git a/source/text.cpp b/source/text.cpp
+index babe8bb9..49abefb5 100644
+--- a/source/text.cpp
++++ b/source/text.cpp
+@@ -16,6 +16,8 @@
+ #include <renderers/opengl_core/text_gl_core.hpp>
+ #elif defined(RENDERER_HEADLESS)
+ #include <renderers/headless/text_headless.hpp>
++#elif defined(RENDERER_PAPP)
++#include <text_papp.hpp>
+ #endif
+ 
+ TextObject::TextObject(std::string txt, double posX, double posY, std::string fontPath) {
+@@ -41,6 +43,8 @@ std::unique_ptr<TextObject> createTextObject(std::string txt, double posX, doubl
+     return std::make_unique<TextObjectGLCore>(txt, posX, posY, fontPath);
+ #elif defined(RENDERER_HEADLESS)
+     return std::make_unique<TextObjectHeadless>(txt, posX, posY, fontPath);
++#elif defined(RENDERER_PAPP)
++    return std::make_unique<TextObjectPapp>(txt, posX, posY, fontPath);
+ #else
+     return nullptr;
+ #endif

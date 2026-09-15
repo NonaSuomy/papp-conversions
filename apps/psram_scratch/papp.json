@@ -1,0 +1,213 @@
+{
+  "name": "psram_scratch",
+  "title": "Scratch Everywhere!",
+  "version": "0.1.0",
+  "description": "Scratch 3 projects (.sb3) on the P4: Scratch Everywhere!'s C++ runtime with a software renderer (480x360 stage, scaled to the canvas), touch as the mouse, gamepad and USB keyboard, sound. Work in progress. Put your .sb3 files in /sd/scratch/.",
+  "author": "Scratch Everywhere! contributors; PAPP port",
+  "category": "Tools",
+  "license": "LGPL-3.0 (Scratch Everywhere!)",
+  "about": "Runs Scratch 3 projects without a browser: Scratch Everywhere!'s C++ runtime, with a PAPP renderer that draws the 480x360 stage in software (bitmap and SVG costumes, rotation, size, ghost, brightness and colour effects, pen, speech bubbles, variable and list monitors) and the P4's PPA scaling it to the canvas. Touch is the mouse, the D-pad the arrow keys, A the space bar; sounds play through the speaker. Copy .sb3 files to /sd/scratch/: with one there it starts at once, with several a list comes up. Optional: Scratch Everywhere!'s gfx/ingame folder in /sd/scratch/se/ adds its fonts (text in vector costumes) and SoundFont (Music extension).",
+  "controls": [
+    "Touch: the mouse (tap = click, drag = mouse down)",
+    "D-pad: arrow keys",
+    "A: space",
+    "B / X / Y / L / R: keys b / x / y / l / r",
+    "Start: green flag (restart the project)",
+    "Select (hold 1 s): stop, back to the project list",
+    "USB keyboard: keys; USB mouse: the mouse",
+    "Menu + X, or Menu held 3 s: quit"
+  ],
+  "upstream": {
+    "project": "Scratch Everywhere!",
+    "version": "a70b696",
+    "url": "https://github.com/ScratchEverywhere/ScratchEverywhere"
+  },
+  "requires": [
+    {"path": "/sd/scratch/*.sb3", "note": "Scratch 3 projects (.sb3) to play"},
+    {"path": "/sd/scratch/se/gfx/ingame/fonts/", "note": "Fonts for text in vector costumes", "optional": true},
+    {"path": "/sd/scratch/se/gfx/ingame/scratch.sf2", "note": "SoundFont for the Music extension", "optional": true}
+  ],
+  "icon": "icon.png",
+  "canvas": {
+    "sizes": ["800x600", "640x480", "480x360"],
+    "recommended": "800x600"
+  },
+  "publish": false,
+  "build": "custom",
+  "source": {
+    "repo": "https://github.com/ScratchEverywhere/ScratchEverywhere",
+    "ref": "a70b6964972b2d30e40c3a493115d390425175ab",
+    "path": "source"
+  },
+  "submodules": [
+    {"path": "papp-deps/json", "repo": "https://github.com/nlohmann/json", "ref": "55f93686c01528224f448c19128836e7df245f72"},
+    {"path": "papp-deps/expected-lite", "repo": "https://github.com/nonstd-lite/expected-lite", "ref": "3583e95bad46f5af7d8a826632bc68a6f7281551"},
+    {"path": "papp-deps/miniz", "repo": "https://github.com/richgel999/miniz", "ref": "d10b03cc73475af673df40f06e5cefd1d5f940d9"},
+    {"path": "papp-deps/stb", "repo": "https://github.com/nothings/stb", "ref": "2c980bb59875b0d32144a71867fbdebb2f77cd20"},
+    {"path": "papp-deps/dr_libs", "repo": "https://github.com/mackron/dr_libs", "ref": "dfe8377631000664666519fdb83da193fd8037f4"},
+    {"path": "papp-deps/tsf", "repo": "https://github.com/schellingb/TinySoundFont", "ref": "853a0a171759f1ddba0de1442133a75912bbeffa"},
+    {"path": "papp-deps/lunasvg", "repo": "https://github.com/sammycage/lunasvg", "ref": "83c58df8103dc7dca423dfd824992af94d49bed6"},
+    {"path": "papp-deps/ryujs", "repo": "https://github.com/poipole807/ryuJS", "ref": "99a53825236d72178722531c233395202fda77eb"},
+    {"path": "papp-deps/font8x8", "repo": "https://github.com/dhepper/font8x8", "ref": "8e279d2d864e79128e96188a6b9526cfa3fbfef9"}
+  ],
+  "patches": [
+    "local:ports/scratch/patches/*.patch"
+  ],
+  "linker_script": "local:ports/redalert/papp_cpp.ld",
+  "includes": [
+    "local:ports/scratch/include",
+    "local:ports/scratch",
+    "local:",
+    "include",
+    "include/runtime",
+    "include/runtime/blocks",
+    "include/platforms",
+    "source",
+    "source/runtime",
+    "source/runtime/blocks",
+    "papp-deps/json/single_include",
+    "papp-deps/expected-lite/include",
+    "papp-deps/miniz",
+    "papp-deps/stb",
+    "papp-deps/dr_libs",
+    "papp-deps/tsf",
+    "papp-deps/lunasvg/include",
+    "papp-deps/lunasvg/plutovg/include",
+    "papp-deps/ryujs",
+    "papp-deps/font8x8"
+  ],
+  "cflags": [
+    "-std=gnu11",
+    "-O2",
+    "-fno-strict-aliasing",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-DPAPP_APP_SIDE=1",
+    "-D__PAPP__",
+    "-DPLUTOVG_BUILD",
+    "-DPLUTOVG_BUILD_STATIC",
+    "-DPLUTOVG_DISABLE_FONT_FACE_CACHE_LOAD",
+    "-D__STDC_NO_THREADS__",
+    "-D__STDC_NO_ATOMICS__",
+    "-DMINIZ_NO_TIME",
+    "-DSTBI_NO_THREAD_LOCALS",
+    "-Wno-unused-variable",
+    "-Wno-unused-function",
+    "-Wno-unused-but-set-variable",
+    "-Wno-maybe-uninitialized",
+    "-Wno-sign-compare",
+    "-Wno-error=incompatible-pointer-types"
+  ],
+  "cxxflags": [
+    "-std=gnu++17",
+    "-O2",
+    "-fno-strict-aliasing",
+    "-fno-exceptions",
+    "-fno-rtti",
+    "-fno-threadsafe-statics",
+    "-fno-use-cxa-atexit",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-DPAPP_APP_SIDE=1",
+    "-D__PAPP__",
+    "-DRENDERER_PAPP",
+    "-DWINDOWING_PAPP",
+    "-DENABLE_AUDIO",
+    "-DENABLE_SVG",
+    "-DENABLE_BITMAP",
+    "-DENABLE_CACHING",
+    "-DPLATFORM_HAS_TOUCH",
+    "-DPLATFORM_HAS_CONTROLLER",
+    "-DLUNASVG_BUILD",
+    "-DLUNASVG_BUILD_STATIC",
+    "-DLUNASVG_DISABLE_LOAD_SYSTEM_FONTS",
+    "-DPLUTOVG_BUILD_STATIC",
+    "-DMINIZ_NO_TIME",
+    "-DSTBI_NO_THREAD_LOCALS",
+    "-Wno-unused-variable",
+    "-Wno-unused-function",
+    "-Wno-unused-but-set-variable",
+    "-Wno-maybe-uninitialized",
+    "-Wno-sign-compare",
+    "-Wno-deprecated-declarations",
+    "-Wno-class-memaccess"
+  ],
+  "groups": [
+    {
+      "dir": "source",
+      "prefix": "se_",
+      "files": [
+        "audiostack.cpp",
+        "filesystem.cpp",
+        "image.cpp",
+        "input.cpp",
+        "log.cpp",
+        "render.cpp",
+        "settings.cpp",
+        "speech_manager.cpp",
+        "speech_text.cpp",
+        "text.cpp",
+        "translation.cpp"
+      ]
+    },
+    {
+      "dir": "source/runtime",
+      "prefix": "rt_",
+      "files": ["*.cpp"]
+    },
+    {
+      "dir": "source/runtime/blocks",
+      "prefix": "blk_",
+      "files": ["*.cpp"]
+    },
+    {
+      "dir": "papp-deps/miniz",
+      "prefix": "miniz_",
+      "files": ["miniz.c", "miniz_tdef.c", "miniz_tinfl.c", "miniz_zip.c"]
+    },
+    {
+      "dir": "papp-deps/stb",
+      "prefix": "stb_",
+      "files": ["stb_vorbis.c"]
+    },
+    {
+      "dir": "papp-deps/ryujs/ryu",
+      "prefix": "ryu_",
+      "files": ["d2s.c"]
+    },
+    {
+      "dir": "papp-deps/lunasvg/plutovg/source",
+      "prefix": "pvg_",
+      "files": ["*.c"]
+    },
+    {
+      "dir": "papp-deps/lunasvg/source",
+      "prefix": "lsvg_",
+      "files": ["*.cpp"]
+    },
+    {
+      "dir": "local:ports/scratch",
+      "prefix": "papp_",
+      "files": [
+        "papp_main.cpp",
+        "papp_scratch.cpp",
+        "papp_platform.cpp",
+        "papp_video.cpp",
+        "papp_audio.cpp",
+        "papp_input.cpp",
+        "papp_render.cpp",
+        "papp_raster.cpp",
+        "papp_image.cpp",
+        "papp_text.cpp",
+        "papp_font.c",
+        "papp_syscalls.c"
+      ]
+    }
+  ],
+  "ldflags": [
+    "-Wl,--wrap=exit",
+    "-lstdc++",
+    "-lsupc++"
+  ],
+  "newlib": true
+}
